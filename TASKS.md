@@ -31,7 +31,7 @@ Spring Boot, PostgreSQL + pgvector, Ollama, and open-source models.
 - [x] Create documents table
 - [x] Create document chunks table
 - [x] Add vector column
-- [ ] Configure Spring Boot database connection
+- [x] Configure Spring Boot database connection
 - [ ] Create JPA/JDBC data access layer
 - [ ] Store document metadata
 - [ ] Store chunks and embeddings
