@@ -27,10 +27,10 @@ Spring Boot, PostgreSQL + pgvector, Ollama, and open-source models.
 
 ## Phase 2 — Vector Database
 
-- [ ] Design database schema
-- [ ] Create documents table
-- [ ] Create document chunks table
-- [ ] Add vector column
+- [x] Design database schema
+- [x] Create documents table
+- [x] Create document chunks table
+- [x] Add vector column
 - [ ] Configure Spring Boot database connection
 - [ ] Create JPA/JDBC data access layer
 - [ ] Store document metadata
@@ -107,4 +107,4 @@ Phase 2 — Vector Database
 
 **Next task**
 
-Design the database schema.
+PostgreSQL schema created with pgvector 768-dimensional embeddings.
