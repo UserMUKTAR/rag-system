@@ -14,35 +14,54 @@ public class SearchService {
     public SearchService(
             JdbcTemplate jdbcTemplate,
             EmbeddingService embeddingService) {
-
         this.jdbcTemplate = jdbcTemplate;
         this.embeddingService = embeddingService;
     }
 
-    public List<String> search(String question, int limit) {
+    public List<SearchResult> search(String question, int limit) {
 
-        // 1. Convert the question into an embedding
         List<Double> embedding =
                 embeddingService.generateEmbedding(question);
 
-        // 2. Convert the embedding to pgvector format
         String vector = embedding.toString();
 
-        // 3. Find the most similar chunks
         String sql = """
-                SELECT content
+                SELECT
+                    content,
+                    embedding <=> ?::vector AS cosine_distance
                 FROM document_chunks
                 WHERE embedding IS NOT NULL
-                ORDER BY embedding <=> ?::vector
+                ORDER BY cosine_distance ASC
                 LIMIT ?
                 """;
 
-        // 4. Execute the search and return the chunk text
-        return jdbcTemplate.query(
+        List<SearchResult> results = jdbcTemplate.query(
                 sql,
-                (resultSet, rowNumber) -> resultSet.getString("content"),
+                (resultSet, rowNumber) -> {
+                    double distance =
+                            resultSet.getDouble("cosine_distance");
+
+                    double similarity = 1.0 - distance;
+
+                    return new SearchResult(
+                            resultSet.getString("content"),
+                            distance,
+                            similarity
+                    );
+                },
                 vector,
                 limit
         );
+
+        // Keep only results that meet the provisional threshold.
+        return results.stream()
+                .filter(result -> result.cosineSimilarity() >= 0.50)
+                .toList();
+    }
+
+    public record SearchResult(
+            String content,
+            double cosineDistance,
+            double cosineSimilarity) {
     }
 }

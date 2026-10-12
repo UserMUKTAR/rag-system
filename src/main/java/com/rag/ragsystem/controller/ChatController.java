@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.rag.ragsystem.service.AnswerService;
 import com.rag.ragsystem.service.SearchService;
+import com.rag.ragsystem.service.SearchService.SearchResult;
 
 @RestController
 @RequestMapping("/api/chat")
@@ -22,7 +23,6 @@ public class ChatController {
     public ChatController(
             SearchService searchService,
             AnswerService answerService) {
-
         this.searchService = searchService;
         this.answerService = answerService;
     }
@@ -34,14 +34,14 @@ public class ChatController {
         String question = request.get("question");
 
         if (question == null || question.isBlank()) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Question must not be empty."));
+            return ResponseEntity.badRequest().body(
+                    Map.of("error", "Question must not be empty."));
         }
 
-        // 1. Retrieve relevant passages from PostgreSQL
-        List<String> context = searchService.search(question, 3);
+        List<SearchResult> searchResults =
+                searchService.search(question, 3);
 
-        if (context.isEmpty()) {
+        if (searchResults.isEmpty()) {
             return ResponseEntity.ok(Map.of(
                     "question", question,
                     "answer", "No relevant passages were found in the uploaded documents.",
@@ -49,14 +49,18 @@ public class ChatController {
             ));
         }
 
-        // 2. Generate an answer using the retrieved passages
-        String answer = answerService.generateAnswer(question, context);
+        // Extract passage text for the LLM.
+        List<String> context = searchResults.stream()
+                .map(SearchResult::content)
+                .toList();
 
-        // 3. Return the answer and its supporting passages
+        String answer =
+                answerService.generateAnswer(question, context);
+
         return ResponseEntity.ok(Map.of(
                 "question", question,
                 "answer", answer,
-                "sources", context
+                "sources", searchResults
         ));
     }
 }

@@ -53,15 +53,20 @@ answers grounded in the retrieved context.
 
 - [x] Generate query embeddings
 - [x] Implement pgvector cosine-distance search
-- [x] Retrieve top-K relevant chunks
+- [x] Retrieve top-K chunks by cosine distance
 - [x] Create `SearchService`
 - [x] Create `SearchController`
 - [x] Test semantic search using Postman
-- [ ] Return similarity scores with retrieved chunks
-- [ ] Evaluate retrieval relevance
+- [x] Return cosine distance and similarity scores
+- [x] Implement provisional relevance threshold (0.50)
+- [x] Test retrieval with relevant questions
+- [x] Test rejection of unrelated search results
+- [ ] Evaluate retrieval relevance across a broader question set
 - [ ] Tune chunk size and overlap
+- [ ] Improve retrieval by searching additional candidates before filtering
 - [ ] Add document-specific retrieval
 - [ ] Evaluate and configure vector indexing
+- [ ] Evaluate and finalize the relevance threshold
 
 ---
 
@@ -71,14 +76,18 @@ answers grounded in the retrieved context.
 - [x] Install and test local LLM using Ollama
 - [x] Create `AnswerService`
 - [x] Create initial RAG prompt
+- [x] Improve prompt grounding instructions
 - [x] Send retrieved context to the LLM
-- [x] Generate answers from retrieved context
+- [x] Generate context-based answers
 - [x] Create `ChatController`
 - [x] Return answers with supporting passages
 - [x] Test the end-to-end RAG API
 - [x] Test an unsupported question
-- [ ] Improve grounding and unsupported-question handling
-- [ ] Evaluate answer quality with additional questions
+- [x] Handle questions when no relevant passages are found
+- [ ] Evaluate answer grounding across a broader question set
+- [ ] Improve answers when context contains partial information
+- [ ] Evaluate answer accuracy and source attribution
+- [ ] Reduce unsupported claims in generated answers
 
 ---
 
@@ -88,8 +97,14 @@ answers grounded in the retrieved context.
 - [x] Implement embedding test endpoint
 - [x] Implement semantic search REST API
 - [x] Implement question-answering REST API
-- [ ] Add request validation and search-limit constraints
-- [ ] Add consistent exception handling
+- [x] Validate missing and blank questions in Search API
+- [x] Validate search-limit constraints (1–10)
+- [x] Validate missing and blank questions in Chat API
+- [x] Test valid and invalid search requests
+- [x] Test valid and invalid chat requests
+- [x] Return meaningful validation error messages
+- [ ] Handle non-numeric search limits with consistent error responses
+- [ ] Add centralized exception handling
 - [ ] Add application logging
 - [ ] Add transaction handling for document ingestion
 - [ ] Prevent duplicate document uploads
@@ -126,8 +141,13 @@ answers grounded in the retrieved context.
 - [x] Connect GitHub remote
 - [x] Push initial project to GitHub
 - [x] Commit PostgreSQL integration checkpoint
-- [ ] Commit and push the completed end-to-end RAG milestone
-- [ ] Keep the working tree clean after each milestone
+- [x] Implement and push the basic end-to-end RAG pipeline
+- [ ] Commit and push retrieval improvements
+- [ ] Commit and push API validation improvements
+- [ ] Commit and push prompt improvements
+- [ ] Commit and push the updated task checklist
+- [ ] Verify the working tree is clean after committing
+- [ ] Verify the latest changes are available on GitHub
 
 ---
 
@@ -187,7 +207,7 @@ PostgreSQL and pgvector integration completed.
 - Verified the chat API returns an answer and supporting passages
 - Tested a question not answered by the uploaded document
 
-**Current Milestone**
+**Milestone**
 
 Basic end-to-end local RAG pipeline implemented and tested.
 
@@ -211,5 +231,60 @@ Basic end-to-end local RAG pipeline implemented and tested.
 **Next Milestone**
 
 Improve retrieval quality and ingestion reliability.
+
+---
+
+### 2026-10-12
+
+**Completed**
+
+- Added cosine-distance calculation to semantic search
+- Returned cosine distance and similarity scores with retrieved passages
+- Implemented provisional cosine similarity threshold of 0.50
+- Tested retrieval with relevant questions
+- Tested rejection of unrelated search results
+- Verified the Chat API fallback when no relevant passages are found
+- Added Search API validation for missing and blank questions
+- Added Search API search-limit validation (1–10)
+- Tested valid and invalid Search API requests
+- Verified Chat API validation for missing and blank questions
+- Tested valid and invalid Chat API requests
+- Improved the RAG prompt with stronger grounding instructions
+- Retested answer generation and unsupported-question handling
+
+**Current Milestone**
+
+Improve retrieval quality and API reliability.
+
+**Current Capabilities**
+
+- Upload PDF documents
+- Extract and chunk PDF text
+- Generate embeddings locally
+- Store document metadata, chunks, and vectors
+- Retrieve passages using pgvector cosine-distance search
+- Return cosine distance and similarity scores
+- Filter results using a provisional relevance threshold
+- Generate answers using the local Qwen2.5 3B model
+- Return answers with supporting passages
+- Reject questions when no retrieved passages meet the threshold
+- Validate Search API and Chat API questions
+- Enforce search-limit constraints
+
+**Known Improvements Needed**
+
+- Evaluate retrieval quality across a broader question set
+- Validate and tune the relevance threshold
+- Improve retrieval candidate selection
+- Improve answer grounding and partial-context handling
+- Add document-specific retrieval
+- Add transaction handling and duplicate-upload protection
+- Add centralized exception handling and application logging
+- Add unit and integration tests
+- Verify and commit the latest code and documentation changes
+
+**Next Milestone**
+
+Complete retrieval and API quality improvements, then establish a verified Git checkpoint.
 
 ---
