@@ -10,71 +10,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.rag.ragsystem.entity.Document;
-import com.rag.ragsystem.repository.DocumentRepository;
-import com.rag.ragsystem.service.ChunkStorageService;
-import com.rag.ragsystem.service.EmbeddingService;
-import com.rag.ragsystem.service.PdfService;
-import com.rag.ragsystem.service.TextChunker;
+import com.rag.ragsystem.service.DocumentIngestionService;
 
 @RestController
 @RequestMapping("/api/documents")
 public class DocumentController {
 
-    private final PdfService pdfService;
-    private final TextChunker textChunker;
-    private final DocumentRepository documentRepository;
-    private final EmbeddingService embeddingService;
-    private final ChunkStorageService chunkStorageService;
+    private final DocumentIngestionService documentIngestionService;
 
     public DocumentController(
-            PdfService pdfService,
-            TextChunker textChunker,
-            DocumentRepository documentRepository,
-            EmbeddingService embeddingService,
-            ChunkStorageService chunkStorageService) {
-
-        this.pdfService = pdfService;
-        this.textChunker = textChunker;
-        this.documentRepository = documentRepository;
-        this.embeddingService = embeddingService;
-        this.chunkStorageService = chunkStorageService;
+            DocumentIngestionService documentIngestionService) {
+        this.documentIngestionService = documentIngestionService;
     }
 
     @PostMapping("/upload")
     public ResponseEntity<List<String>> uploadPdf(
             @RequestParam("file") MultipartFile file) throws IOException {
 
-        // 1. Extract text from the PDF
-        String extractedText = pdfService.extractText(file);
+        List<String> chunks = documentIngestionService.ingest(file);
 
-        // 2. Save document metadata
-        Document document = new Document();
-        document.setFileName(file.getOriginalFilename());
-        document.setFileType(file.getContentType());
-
-        Document savedDocument = documentRepository.save(document);
-
-        // 3. Split extracted text into chunks
-        List<String> chunks = textChunker.chunkText(extractedText);
-
-        // 4. Generate and save an embedding for each chunk
-        for (int i = 0; i < chunks.size(); i++) {
-
-            String chunk = chunks.get(i);
-
-            List<Double> embedding =
-                    embeddingService.generateEmbedding(chunk);
-
-            chunkStorageService.saveChunk(
-                    savedDocument.getId(),
-                    i,
-                    chunk,
-                    embedding
-            );
-        }
-
-        // 5. Return the processed chunks
         return ResponseEntity.ok(chunks);
     }
 }

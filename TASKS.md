@@ -46,6 +46,7 @@ answers grounded in the retrieved context.
 - [x] Store chunks and embeddings in PostgreSQL
 - [x] Verify stored vector dimensions
 - [x] Verify chunk-to-document relationships
+- [x] Verify all 191 chunks have embeddings for document ID 3
 
 ---
 
@@ -93,6 +94,8 @@ answers grounded in the retrieved context.
 
 ## Phase 5 — API and Quality
 
+### Completed
+
 - [x] Implement PDF upload REST API
 - [x] Implement embedding test endpoint
 - [x] Implement semantic search REST API
@@ -103,16 +106,33 @@ answers grounded in the retrieved context.
 - [x] Test valid and invalid search requests
 - [x] Test valid and invalid chat requests
 - [x] Return meaningful validation error messages
+- [x] Validate PDF text before persistence
+- [x] Validate that text chunks can be created
+- [x] Implement transactional document and chunk persistence
+- [x] Generate embeddings outside the database transaction
+- [x] Verify rollback of document metadata and chunk inserts in a controlled integration test
+- [x] Verify successful PDF upload after ingestion changes
+- [x] Verify stored chunks and embeddings after PDF ingestion
+- [x] Run the Spring application successfully after ingestion changes
+- [x] Run the existing JUnit tests successfully
+
+### Remaining
+
 - [ ] Handle non-numeric search limits with consistent error responses
 - [ ] Add centralized exception handling
 - [ ] Add application logging
-- [ ] Add transaction handling for document ingestion
+- [ ] Handle empty and invalid uploaded files consistently
+- [ ] Return structured error responses for ingestion failures
 - [ ] Prevent duplicate document uploads
-- [ ] Add unit tests
-- [ ] Add integration tests
+- [ ] Test ingestion when Ollama is unavailable
+- [ ] Test ingestion when embedding generation fails partway through a document
+- [ ] Verify rollback for additional database failure scenarios
+- [ ] Add broader unit test coverage
+- [ ] Expand integration test coverage
 - [ ] Improve API response structure
 - [ ] Document API endpoints and example requests
 - [ ] Review and improve project structure
+- [ ] Investigate Unicode text extraction and display issues
 
 ---
 
@@ -128,6 +148,10 @@ answers grounded in the retrieved context.
 - [ ] Add CI/CD
 - [ ] Review application security
 - [ ] Improve configuration and secret management
+- [ ] Add configurable Ollama connection settings
+- [ ] Add external-service timeouts and error handling
+- [ ] Review database transaction duration and connection usage
+- [ ] Evaluate memory usage when ingesting large PDFs
 - [ ] Prepare production-ready README
 - [ ] Document architecture and deployment
 - [ ] Perform final end-to-end verification
@@ -136,16 +160,26 @@ answers grounded in the retrieved context.
 
 ## Git and Version Control
 
+### Previously Completed
+
 - [x] Initialize Git repository
 - [x] Create `main` branch
 - [x] Connect GitHub remote
 - [x] Push initial project to GitHub
 - [x] Commit PostgreSQL integration checkpoint
 - [x] Implement and push the basic end-to-end RAG pipeline
-- [ ] Commit and push retrieval improvements
-- [ ] Commit and push API validation improvements
-- [ ] Commit and push prompt improvements
-- [ ] Commit and push the updated task checklist
+- [x] Commit and push retrieval improvements
+- [x] Commit and push API validation improvements
+- [x] Commit and push prompt improvements
+- [x] Commit and push the updated task checklist
+- [x] Verify the previous checkpoint was synchronized with GitHub
+
+### Current Ingestion Reliability Changes
+
+- [ ] Review the current Git diff
+- [ ] Verify the final code and test changes
+- [ ] Commit ingestion reliability changes
+- [ ] Push ingestion reliability changes to GitHub
 - [ ] Verify the working tree is clean after committing
 - [ ] Verify the latest changes are available on GitHub
 
@@ -251,10 +285,12 @@ Improve retrieval quality and ingestion reliability.
 - Tested valid and invalid Chat API requests
 - Improved the RAG prompt with stronger grounding instructions
 - Retested answer generation and unsupported-question handling
+- Committed and pushed retrieval, API validation, and prompt improvements
+- Updated and pushed the project task checklist
 
-**Current Milestone**
+**Milestone**
 
-Improve retrieval quality and API reliability.
+Retrieval quality improvements and API validation implemented.
 
 **Current Capabilities**
 
@@ -278,13 +314,77 @@ Improve retrieval quality and API reliability.
 - Improve retrieval candidate selection
 - Improve answer grounding and partial-context handling
 - Add document-specific retrieval
-- Add transaction handling and duplicate-upload protection
+- Add duplicate-upload protection
 - Add centralized exception handling and application logging
-- Add unit and integration tests
-- Verify and commit the latest code and documentation changes
+- Expand unit and integration test coverage
+- Complete ingestion reliability improvements
 
 **Next Milestone**
 
-Complete retrieval and API quality improvements, then establish a verified Git checkpoint.
+Complete ingestion reliability improvements and establish a verified Git checkpoint.
+
+---
+
+### 2026-10-13
+
+**Completed**
+
+- Created `DocumentIngestionService` to coordinate PDF ingestion
+- Added validation for PDFs containing no extractable text
+- Added validation for empty chunk collections
+- Created `DocumentPersistenceService`
+- Moved embedding generation outside the database transaction
+- Implemented transactional persistence for document metadata and chunks
+- Verified successful application startup after the changes
+- Uploaded a PDF successfully through Postman and received HTTP 200 OK
+- Verified document ID 3 contains 191 chunks
+- Verified all 191 chunks have embeddings
+- Recorded the database baseline before rollback testing: 3 documents and 382 chunks
+- Added a controlled transaction rollback integration test
+- Verified the document insert was rolled back after a deliberate validation failure
+- Verified no chunks remained for the temporary test document
+- Confirmed both JUnit tests passed
+
+**Milestone**
+
+Document ingestion reliability and transactional persistence implemented and tested.
+
+**Current Capabilities**
+
+- Upload PDF documents through the REST API
+- Extract text from PDFs
+- Reject PDFs with no extractable text
+- Split extracted text into overlapping chunks
+- Generate embeddings locally using Ollama
+- Store document metadata in PostgreSQL
+- Store text chunks and vector embeddings using JDBC
+- Persist document metadata and chunks transactionally
+- Roll back document and chunk writes in the tested failure scenario
+- Retrieve relevant passages using pgvector
+- Generate answers using the local Qwen2.5 3B model
+- Return answers with supporting passages
+- Validate Search API and Chat API inputs
+
+**Known Improvements Needed**
+
+- Evaluate retrieval quality across a broader question set
+- Validate and tune the provisional relevance threshold
+- Improve retrieval candidate selection
+- Add document-specific retrieval
+- Improve answer grounding and partial-context handling
+- Prevent duplicate document uploads
+- Add centralized exception handling
+- Add application logging
+- Expand unit and integration test coverage
+- Test additional PDF ingestion failure scenarios
+- Investigate Unicode text extraction and display issues
+- Review the current Git diff
+- Commit and push the ingestion reliability changes
+- Verify the working tree is clean after committing
+- Verify the latest changes are available on GitHub
+
+**Next Milestone**
+
+Review and commit ingestion reliability changes, then continue improving retrieval quality and API robustness.
 
 ---
