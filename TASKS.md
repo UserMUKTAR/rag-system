@@ -2,13 +2,9 @@
 
 ## Project Goal
 
-Build a local, free, production-style PDF Retrieval-Augmented
-Generation (RAG) system using Java 17, Spring Boot, PostgreSQL
-with pgvector, Ollama, and open-source models.
+Build a local, free, production-style PDF Retrieval-Augmented Generation (RAG) system using Java 17, Spring Boot, PostgreSQL with pgvector, Ollama, and open-source models.
 
-The system should ingest PDF documents, extract and chunk text,
-generate embeddings, retrieve relevant passages, and generate
-answers grounded in the retrieved context.
+The system should ingest PDF documents, extract and chunk text, generate embeddings, retrieve relevant passages, and generate answers grounded in the retrieved context.
 
 ---
 
@@ -176,12 +172,12 @@ answers grounded in the retrieved context.
 
 ### Current Ingestion Reliability Changes
 
-- [ ] Review the current Git diff
-- [ ] Verify the final code and test changes
-- [ ] Commit ingestion reliability changes
-- [ ] Push ingestion reliability changes to GitHub
-- [ ] Verify the working tree is clean after committing
-- [ ] Verify the latest changes are available on GitHub
+- [x] Review the current Git diff
+- [x] Verify the final code and test changes
+- [x] Commit ingestion reliability changes
+- [x] Push ingestion reliability changes to GitHub
+- [x] Verify the working tree is clean after committing
+- [x] Verify the latest changes are available on GitHub
 
 ---
 
@@ -378,13 +374,28 @@ Document ingestion reliability and transactional persistence implemented and tes
 - Expand unit and integration test coverage
 - Test additional PDF ingestion failure scenarios
 - Investigate Unicode text extraction and display issues
-- Review the current Git diff
-- Commit and push the ingestion reliability changes
-- Verify the working tree is clean after committing
-- Verify the latest changes are available on GitHub
 
 **Next Milestone**
 
-Review and commit ingestion reliability changes, then continue improving retrieval quality and API robustness.
+Continue improving retrieval quality and API robustness.
+
+---
+
+### 2026-10-14
+
+**Completed**
+
+- Committed ingestion reliability changes as `c21f587` (`feat: improve document ingestion reliability`)
+- Pushed the commit to GitHub on `main`
+- Verified local `main` is up to date with `origin/main`
+- Verified the working tree is clean
+
+**Milestone**
+
+Ingestion reliability changes committed, pushed, and synchronized with GitHub.
+
+**Next Milestone**
+
+Continue improving API robustness, then evaluate retrieval quality across a broader question set.
 
 ---
