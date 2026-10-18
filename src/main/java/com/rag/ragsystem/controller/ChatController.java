@@ -1,5 +1,6 @@
 package com.rag.ragsystem.controller;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rag.ragsystem.exception.ApiErrorResponse;
 import com.rag.ragsystem.service.AnswerService;
 import com.rag.ragsystem.service.SearchService;
 import com.rag.ragsystem.service.SearchService.SearchResult;
@@ -23,19 +25,25 @@ public class ChatController {
     public ChatController(
             SearchService searchService,
             AnswerService answerService) {
+
         this.searchService = searchService;
         this.answerService = answerService;
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, Object>> chat(
+    public ResponseEntity<?> chat(
             @RequestBody Map<String, String> request) {
 
         String question = request.get("question");
 
         if (question == null || question.isBlank()) {
             return ResponseEntity.badRequest().body(
-                    Map.of("error", "Question must not be empty."));
+                    new ApiErrorResponse(
+                            Instant.now(),
+                            400,
+                            "Bad Request",
+                            "Question must not be empty.",
+                            "/api/chat"));
         }
 
         List<SearchResult> searchResults =
@@ -44,7 +52,8 @@ public class ChatController {
         if (searchResults.isEmpty()) {
             return ResponseEntity.ok(Map.of(
                     "question", question,
-                    "answer", "No relevant passages were found in the uploaded documents.",
+                    "answer",
+                    "No relevant passages were found in the uploaded documents.",
                     "sources", List.of()
             ));
         }

@@ -1,7 +1,6 @@
 package com.rag.ragsystem.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,8 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rag.ragsystem.exception.ApiErrorResponse;
 import com.rag.ragsystem.service.SearchService;
 import com.rag.ragsystem.service.SearchService.SearchResult;
+
+import java.time.Instant;
 
 @RestController
 @RequestMapping("/api/search")
@@ -29,12 +31,22 @@ public class SearchController {
 
         if (question == null || question.isBlank()) {
             return ResponseEntity.badRequest().body(
-                    Map.of("error", "Question must not be empty."));
+                    new ApiErrorResponse(
+                            Instant.now(),
+                            400,
+                            "Bad Request",
+                            "Question must not be empty.",
+                            "/api/search"));
         }
 
         if (limit < 1 || limit > 10) {
             return ResponseEntity.badRequest().body(
-                    Map.of("error", "Search limit must be between 1 and 10."));
+                    new ApiErrorResponse(
+                            Instant.now(),
+                            400,
+                            "Bad Request",
+                            "Search limit must be between 1 and 10.",
+                            "/api/search"));
         }
 
         List<SearchResult> results =

@@ -14,12 +14,22 @@ public class PdfService {
 
     public String extractText(MultipartFile file) throws IOException {
 
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "The uploaded file must not be empty.");
+        }
+
         try (InputStream inputStream = file.getInputStream();
-             PDDocument document = Loader.loadPDF(inputStream.readAllBytes())) {
+             PDDocument document =
+                     Loader.loadPDF(inputStream.readAllBytes())) {
 
             PDFTextStripper pdfTextStripper = new PDFTextStripper();
 
             return pdfTextStripper.getText(document);
+
+        } catch (IOException ex) {
+            throw new IllegalArgumentException(
+                    "The uploaded file is not a valid or readable PDF.");
         }
     }
 }

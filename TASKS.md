@@ -111,14 +111,14 @@ The system should ingest PDF documents, extract and chunk text, generate embeddi
 - [x] Verify stored chunks and embeddings after PDF ingestion
 - [x] Run the Spring application successfully after ingestion changes
 - [x] Run the existing JUnit tests successfully
+- [x] Handle non-numeric search limits with consistent error responses
+- [x] Add centralized exception handling
+- [x] Handle empty and invalid uploaded files consistently
+- [x] Return structured error responses for ingestion failures
 
 ### Remaining
 
-- [ ] Handle non-numeric search limits with consistent error responses
-- [ ] Add centralized exception handling
 - [ ] Add application logging
-- [ ] Handle empty and invalid uploaded files consistently
-- [ ] Return structured error responses for ingestion failures
 - [ ] Prevent duplicate document uploads
 - [ ] Test ingestion when Ollama is unavailable
 - [ ] Test ingestion when embedding generation fails partway through a document
@@ -397,5 +397,14 @@ Ingestion reliability changes committed, pushed, and synchronized with GitHub.
 **Next Milestone**
 
 Continue improving API robustness, then evaluate retrieval quality across a broader question set.
+
+---
+
+### 2026-10-18
+
+- Implemented centralized API exception handling with structured error responses.
+- Improved validation for search limits, chat requests, and PDF uploads.
+- Verified valid PDF uploads and invalid or missing upload scenarios.
+- Ran `mvn test`: 2 tests passed, 0 failures, 0 errors.
 
 ---
