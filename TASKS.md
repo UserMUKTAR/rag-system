@@ -115,6 +115,7 @@ The system should ingest PDF documents, extract and chunk text, generate embeddi
 - [x] Add centralized exception handling
 - [x] Handle empty and invalid uploaded files consistently
 - [x] Return structured error responses for ingestion failures
+- [x] Add unit tests for global exception handling (HTTP 400 and HTTP 500)
 
 ### Remaining
 
@@ -123,7 +124,6 @@ The system should ingest PDF documents, extract and chunk text, generate embeddi
 - [ ] Test ingestion when Ollama is unavailable
 - [ ] Test ingestion when embedding generation fails partway through a document
 - [ ] Verify rollback for additional database failure scenarios
-- [ ] Add broader unit test coverage
 - [ ] Expand integration test coverage
 - [ ] Improve API response structure
 - [ ] Document API endpoints and example requests
@@ -406,5 +406,12 @@ Continue improving API robustness, then evaluate retrieval quality across a broa
 - Improved validation for search limits, chat requests, and PDF uploads.
 - Verified valid PDF uploads and invalid or missing upload scenarios.
 - Ran `mvn test`: 2 tests passed, 0 failures, 0 errors.
+
+---
+
+### 2026-10-21
+
+- Added GlobalExceptionHandlerTests for structured HTTP 400 and HTTP 500 responses.
+- Ran `mvn test` successfully: 4 tests passed, 0 failures, 0 errors.
 
 ---
