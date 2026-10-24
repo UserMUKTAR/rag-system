@@ -116,6 +116,7 @@ The system should ingest PDF documents, extract and chunk text, generate embeddi
 - [x] Handle empty and invalid uploaded files consistently
 - [x] Return structured error responses for ingestion failures
 - [x] Add unit tests for global exception handling (HTTP 400 and HTTP 500)
+- [x] Add automated search-controller tests for request validation and successful responses
 
 ### Remaining
 
@@ -415,3 +416,8 @@ Continue improving API robustness, then evaluate retrieval quality across a broa
 - Ran `mvn test` successfully: 4 tests passed, 0 failures, 0 errors.
 
 ---
+
+### 2026-10-24
+- Added automated tests for SearchController request validation and successful search responses.
+- Covered missing and blank questions, invalid search limits, nonnumeric limits, and successful search responses.
+- Verified all 10 tests pass using `mvn clean test`.
