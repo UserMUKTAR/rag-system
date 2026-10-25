@@ -24,6 +24,9 @@ public class Document {
     @Column(name = "file_type")
     private String fileType;
 
+    @Column(name = "sha256_hash", length = 64, unique = true)
+    private String sha256Hash;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
@@ -50,6 +53,7 @@ public class Document {
         return fileType;
     }
 
+
     public void setFileType(String fileType) {
         this.fileType = fileType;
     }
@@ -61,9 +65,17 @@ public class Document {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-    
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+    }
+
+    public String getSha256Hash() {
+        return sha256Hash;
+    }
+
+    public void setSha256Hash(String sha256Hash) {
+        this.sha256Hash = sha256Hash;
     }
 }

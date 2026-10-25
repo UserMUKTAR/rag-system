@@ -25,6 +25,17 @@ public class GlobalExceptionHandler {
     private static final Logger logger =
             LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    @ExceptionHandler(DuplicateDocumentException.class)
+    public ResponseEntity<ApiErrorResponse> handleDuplicateDocument(
+            DuplicateDocumentException ex,
+            HttpServletRequest request) {
+
+        return buildErrorResponse(
+                HttpStatus.CONFLICT,
+                ex.getMessage(),
+                request.getRequestURI());
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiErrorResponse> handleIllegalArgument(
             IllegalArgumentException ex,
@@ -40,7 +51,7 @@ public class GlobalExceptionHandler {
         MissingServletRequestParameterException.class,
         MissingServletRequestPartException.class,
         MethodArgumentTypeMismatchException.class,
-        HttpMessageNotReadableException.class,     
+        HttpMessageNotReadableException.class,
         MultipartException.class
 })
     public ResponseEntity<ApiErrorResponse> handleBadRequest(

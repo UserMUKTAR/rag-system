@@ -117,11 +117,14 @@ The system should ingest PDF documents, extract and chunk text, generate embeddi
 - [x] Return structured error responses for ingestion failures
 - [x] Add unit tests for global exception handling (HTTP 400 and HTTP 500)
 - [x] Add automated search-controller tests for request validation and successful responses
+- [x] Prevent sequential duplicate PDF uploads using SHA-256 hashes
+- [x] Add a unique database constraint for document SHA-256 hashes
+- [x] Return HTTP 409 Conflict for sequential duplicate uploads
+- [x] Add unit tests for duplicate PDF rejection and new PDF ingestion
 
 ### Remaining
 
 - [ ] Add application logging
-- [ ] Prevent duplicate document uploads
 - [ ] Test ingestion when Ollama is unavailable
 - [ ] Test ingestion when embedding generation fails partway through a document
 - [ ] Verify rollback for additional database failure scenarios
@@ -179,6 +182,9 @@ The system should ingest PDF documents, extract and chunk text, generate embeddi
 - [x] Push ingestion reliability changes to GitHub
 - [x] Verify the working tree is clean after committing
 - [x] Verify the latest changes are available on GitHub
+- [ ] Review and commit the SHA-256 duplicate-upload changes
+- [ ] Push the duplicate-upload changes to GitHub
+- [ ] Verify the duplicate-upload checkpoint is synchronized with GitHub
 
 ---
 
@@ -421,3 +427,21 @@ Continue improving API robustness, then evaluate retrieval quality across a broa
 - Added automated tests for SearchController request validation and successful search responses.
 - Covered missing and blank questions, invalid search limits, nonnumeric limits, and successful search responses.
 - Verified all 10 tests pass using `mvn clean test`.
+
+---
+
+## 2026-10-25
+
+**Completed**
+
+- Added SHA-256 hashing to identify duplicate PDF uploads.
+- Added the sha256_hash column and a unique database constraint.
+- Updated document persistence to store the PDF hash with document metadata.
+- Added duplicate-document exception handling that returns HTTP 409 Conflict.
+- Verified that uploading the same PDF again does not create another document or its chunks.
+- Added unit tests for duplicate PDF rejection and the successful new-PDF ingestion path.
+- Ran mvn clean test: 12 tests passed, 0 failures, 0 errors, 0 skipped.
+
+**Milestone**
+
+Sequential duplicate PDF detection implemented and verified locally. Concurrent duplicate-upload handling and Git checkpointing remain outstanding.

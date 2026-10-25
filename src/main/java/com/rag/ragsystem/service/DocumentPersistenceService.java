@@ -26,6 +26,7 @@ public class DocumentPersistenceService {
     public void saveDocumentAndChunks(
             String fileName,
             String fileType,
+            String sha256Hash,
             List<String> chunks,
             List<List<Double>> embeddings) {
 
@@ -40,8 +41,10 @@ public class DocumentPersistenceService {
 
         // Save the document metadata.
         Document document = new Document();
+
         document.setFileName(fileName);
         document.setFileType(fileType);
+        document.setSha256Hash(sha256Hash);
 
         Document savedDocument = documentRepository.save(document);
 
