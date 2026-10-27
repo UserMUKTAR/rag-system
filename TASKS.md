@@ -121,6 +121,11 @@ The system should ingest PDF documents, extract and chunk text, generate embeddi
 - [x] Add a unique database constraint for document SHA-256 hashes
 - [x] Return HTTP 409 Conflict for sequential duplicate uploads
 - [x] Add unit tests for duplicate PDF rejection and new PDF ingestion
+- [x] Handle duplicate-hash constraint violations during persistence
+- [x] Return HTTP 409 for the recognized duplicate-hash constraint violation
+- [x] Add unit tests for duplicate-hash and unrelated integrity violations
+- [x] Verify concurrent duplicate handling against PostgreSQL
+- [x] Verify simultaneous duplicate uploads through the REST API
 
 ### Remaining
 
@@ -182,9 +187,12 @@ The system should ingest PDF documents, extract and chunk text, generate embeddi
 - [x] Push ingestion reliability changes to GitHub
 - [x] Verify the working tree is clean after committing
 - [x] Verify the latest changes are available on GitHub
-- [ ] Review and commit the SHA-256 duplicate-upload changes
-- [ ] Push the duplicate-upload changes to GitHub
-- [ ] Verify the duplicate-upload checkpoint is synchronized with GitHub
+- [x] Commit and push sequential SHA-256 duplicate-upload protection
+- [x] Verify the sequential duplicate-upload checkpoint is synchronized with GitHub
+- [ ] Review concurrent duplicate-handling changes
+- [ ] Commit concurrent duplicate-handling changes
+- [ ] Push concurrent duplicate-handling changes to GitHub
+- [ ] Verify the concurrent duplicate-handling checkpoint is synchronized with GitHub
 
 ---
 
@@ -445,3 +453,25 @@ Continue improving API robustness, then evaluate retrieval quality across a broa
 **Milestone**
 
 Sequential duplicate PDF detection implemented and verified locally. Concurrent duplicate-upload handling and Git checkpointing remain outstanding.
+
+---
+
+## 2026-10-27
+
+**In Progress**
+
+- Added persistence-level handling for duplicate SHA-256 constraint violations.
+- Added unit tests for duplicate-hash and unrelated integrity violations.
+- Ran `mvn clean test`: 15 tests passed, 0 failures, 0 errors, 0 skipped.
+- Verified `git diff --check` reports no whitespace errors.
+
+**Remaining**
+
+- Review the concurrent duplicate-handling implementation and tests.
+- Verify concurrent duplicate handling against PostgreSQL.
+- Verify simultaneous duplicate uploads through the REST API.
+- Review, commit, and push the verified changes.
+
+**Milestone**
+
+Concurrent duplicate-upload handling is under development. Unit tests pass; real concurrent database and API verification remains outstanding.
